@@ -1,6 +1,6 @@
 import motor.motor_asyncio as amotor
 import asyncio
-url = "mongodb+srv://botuser:UilOJTbgaJKF6eBa@cluster0.o0mhj.gcp.mongodb.net/Francium?retryWrites=true&w=majority"
+url = "mongodb+srv://botuser:9K4Am7njeSIesMLQ@cluster0.o0mhj.gcp.mongodb.net/Francium?retryWrites=true&w=majority"
 class DB:
     def __init__(self,db):
         self.client\
@@ -46,7 +46,7 @@ class DB:
                 if i!="_id":temp+=[x+":"+str(i[x])]
             res+=[",".join(temp)]
         return "\n".join(res)
-
+"""
 async def main():
     db=DB("users")
     await db.add_collection("currency")
@@ -57,3 +57,4 @@ async def main():
     print(m)
 if __name__=="__main__":
     asyncio.get_event_loop().run_until_complete(main())
+"""
