@@ -1,7 +1,10 @@
+import datetime
 import random
 import traceback
 import discord
 from discord.ext import commands
+from utils import *
+import tracemalloc
 
 client = commands.Bot(command_prefix = commands.when_mentioned_or('f!', "F!", "f !", "F !"))
 
@@ -20,14 +23,20 @@ async def on_command_error(ctx, error):
                                                              random.randint(0, 255)))
         await ctx.send("***Roses are red, violets are blue, there is an error when the command is used by you***",
                        embed=embed, delete_after=15)
+        outputres = ""
         for i in (traceback.format_exception(None, error, error.__traceback__)):
-            print(i, end="")
+            outputres += i
+        webhook = await get_webhook(ctx,733520795766227026,733538757289967646)
+        emb = discord.Embed(colour=discord.Colour.red(), description="```"+outputres+"```\n"+f"[Jump]({ctx.message.jump_url})")
+        await webhook.send(embed=emb)
+        print(outputres)
 
 
 @client.event
 async def on_ready():
     for i in ["general","stats"]:
         client.load_extension(i)
+    await client.get_channel(733520795766227026).send(embed=discord.Embed(title="Bot loaded",description="```"+datetime.datetime.now().strftime("%H:%M:%S, %d/%m/%Y")+"```"))
     print('Bot is ready')
 
 client.run('NzMyNzU5NjQ1MjMxMjUxNDY2.Xw5XGQ.SOlnyAGFvatJtHad06ag-HbTwvI')
