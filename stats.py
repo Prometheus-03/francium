@@ -49,6 +49,7 @@ class Stats(commands.Cog):
             return
         if recipient.bot or ctx.author.bot:
             await ctx.send(f"⚠ | {ctx.author.mention}, bots cannot engage in financial transactions.!")
+            return
         async with ctx.typing():
             db = DB("users")
             db.set_collection('currency')
