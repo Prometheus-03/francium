@@ -64,7 +64,7 @@ class Stats(commands.Cog):
                 if receiver == []:
                     receivercurr = 0
                     await db.insertnorepeat(userid=recipient.id)
-                    receiver = await db.find(userid=recipient.id)[0]
+                    receiver = (await db.find(userid=recipient.id))[0]
                 else:
                     receiver = receiver[0]
                     receivercurr = receiver['money']
