@@ -47,6 +47,8 @@ class Stats(commands.Cog):
         if recipient.id==ctx.author.id:
             await ctx.send(f"⚠ | {ctx.author.mention}, you may not send money to yourself!")
             return
+        if recipient.bot or ctx.author.bot:
+            await ctx.send(f"⚠ | {ctx.author.mention}, bots cannot engage in financial transactions.!")
         async with ctx.typing():
             db = DB("users")
             db.set_collection('currency')
@@ -60,8 +62,8 @@ class Stats(commands.Cog):
                 author = author[0]
                 if receiver == []:
                     receivercurr = 0
-                    await db.insertnorepeat(userid=receiver.id)
-                    receiver = await db.find(userid=receiver.id)[0]
+                    await db.insertnorepeat(userid=recipient.id)
+                    receiver = await db.find(userid=recipient.id)[0]
                 else:
                     receiver = receiver[0]
                     receivercurr = receiver['money']
