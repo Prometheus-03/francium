@@ -18,9 +18,6 @@ import datetime
 import utils
 from paginator import *
 from simplepaginator import SimplePaginator
-import numpy as np
-from PIL import Image, ImageOps, ImageDraw, ImageFilter, ImageFont
-from io import BytesIO
 
 ownerid = 586426079078514700
 allowed = [ownerid, 722673814659530784]  # test account
