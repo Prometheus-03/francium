@@ -14,7 +14,6 @@ import random
 import textwrap
 from contextlib import redirect_stdout
 import datetime
-import humanfriendly
 
 import utils
 from paginator import *
