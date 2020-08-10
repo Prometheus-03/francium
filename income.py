@@ -153,5 +153,28 @@ class Income(commands.Cog):
                 await db.update(objid=profile["_id"], bronze=profile["bronze"])
         await ctx.send(
             f"You swing your pickaxe and hit **{rewards[reward]}**, earning **{money}**<:Bronze:733334935091544156>!")
+
+    @commands.cooldown(rate=1,per=10)
+    @commands.command(aliases=["convert"])
+    async def exchange(self,ctx):
+        '''Exchanges your bronze for silver'''
+        async with ctx.typing():
+            db = DB("users")
+            db.set_collection("currency")
+            user = await db.find(userid=ctx.author.id)
+            if user == []:
+                await db.insertnorepeat(userid=ctx.author.id,money=0,bronze=0,cooldown=0)
+                message = f"{ctx.author.mention}, you do not have any bronze to exchange!"
+            else:
+                user = user[0]
+                if user["bronze"]<1000:
+                    message = f"{ctx.author.mention}, you do not have enough bronze to exchange!"
+                else:
+                    silver = user["bronze"]//1000
+                    bronze = user["bronze"] - 1000*silver
+                    await db.update(objid=user["_id"],money=silver+user["money"],bronze=bronze)
+                    message = f"{ctx.author.mention}, you have converted {1000*silver}<:Bronze:733334935091544156> into {silver}<:Silver:733335375589933130>!"
+        await ctx.send(message)
+
 def setup(bot):
     bot.add_cog(Income(bot))
