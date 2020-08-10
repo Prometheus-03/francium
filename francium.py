@@ -34,7 +34,7 @@ async def on_command_error(ctx, error):
 
 @client.event
 async def on_ready():
-    for i in ["general","stats"]:
+    for i in ["general","income","stats","transactions","repl"]:
         client.load_extension(i)
     await client.get_channel(733520795766227026).send(embed=discord.Embed(title="Bot loaded",description="```"+datetime.datetime.now().strftime("%H:%M:%S, %d/%m/%Y")+"```"))
     print('Bot is ready')
