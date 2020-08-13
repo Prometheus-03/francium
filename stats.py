@@ -86,7 +86,7 @@ class Stats(commands.Cog):
                     message = ("You have reached the maximum number of workers for your guild level. Type `f!guild upgrade` to upgrade your guild.")
                 else:
                     if user['money']<int(workstats['guild_level']*500+333):
-                        message = (f"You do not have a sufficient balance ({int(workers*4375/24)}<:Silver:733335375589933130>)")
+                        message = (f"You do not have a sufficient balance ({workstats['guild_level']*500+333}<:Silver:733335375589933130>)")
                     else:
                         user['money']-=int(workstats['guild_level']*500+333)
                         choice = random.randint(0,2)
