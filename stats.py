@@ -66,6 +66,7 @@ class Stats(commands.Cog):
 
     @workers.command()
     async def buy(self,ctx):
+        '''Lets you buy workers'''
         async with ctx.typing():
             db = DB('users')
             db.set_collection('currency')
@@ -125,6 +126,7 @@ class Stats(commands.Cog):
 
     @guild.command()
     async def upgrade(self,ctx):
+        '''Upgrades your guild level so that you can buy more workers'''
         async with ctx.typing():
             db = DB('users')
             db.set_collection('workers')
