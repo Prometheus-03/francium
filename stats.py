@@ -66,7 +66,6 @@ class Stats(commands.Cog):
 
     @workers.command()
     async def buy(self,ctx):
-        message = ""
         async with ctx.typing():
             db = DB('users')
             db.set_collection('currency')
@@ -86,10 +85,10 @@ class Stats(commands.Cog):
                 if workstats['guild_level']*3==workers:
                     message = ("You have reached the maximum number of workers for your guild level. Type `f!guild upgrade` to upgrade your guild.")
                 else:
-                    if user['money']<int(workers*4375/24):
+                    if user['money']<int(workstats['guild_level']*500+333):
                         message = (f"You do not have a sufficient balance ({int(workers*4375/24)}<:Silver:733335375589933130>)")
                     else:
-                        user['money']-=int(workers*4375/24)
+                        user['money']-=int(workstats['guild_level']*500+333)
                         choice = random.randint(0,2)
                         if choice==0:
                             workstats['fish']+=1
