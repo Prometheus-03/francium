@@ -62,7 +62,10 @@ class Transactions(commands.Cog):
                     f"Transfer succeeded! {money}<:Silver:733335375589933130> has been transferred to {recipient.mention}")
                 webhook = await get_webhook(ctx, 733520821619916900, 733530983751483423)
                 emb = discord.Embed(title="Financial transfer", colour=discord.Colour.lighter_grey())
-                emb.description = f"**Sender:** {ctx.author.mention}\n**Receiver: ** {recipient.mention}\n**Amount:** {money}"
+                emb.description = f"""**Sender:** {ctx.author.mention}
+                **Receiver: ** {recipient.mention}
+                **Amount:** {money}
+                [[Jump to transaction]]({ctx.message.jump_url})"""
                 await webhook.send(embed=emb)
             except asyncio.TimeoutError:
                 await ctx.send("Transfer of money cancelled.")
@@ -91,7 +94,9 @@ class Transactions(commands.Cog):
                     money) + "<:Silver:733335375589933130> has been deposited into the world bank!"
                 webhook = await get_webhook(ctx, 733520821619916900, 733530983751483423)
                 embed = discord.Embed(title="Financial deposit", colour=discord.Colour.light_grey())
-                embed.description = f"**Depositor:** {ctx.author.mention}\n**Amount:** {money}"
+                embed.description = f"""**Depositor:** {ctx.author.mention}
+                **Amount:** {money}
+                [[Jump to transaction]]({ctx.message.jump_url})"""
                 await webhook.send(embed=embed)
             await ctx.send(message)
 
