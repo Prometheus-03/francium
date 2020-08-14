@@ -5,6 +5,7 @@ import random
 from discord.ext import commands
 import discord
 from dbwrapper import DB
+from simplepaginator import SimplePaginator
 from utils import *
 
 
@@ -31,24 +32,24 @@ class Stats(commands.Cog):
         await ctx.send(text)
 
     @commands.cooldown(rate=1,per=7,type=commands.BucketType.channel)
-    @commands.group()
-    async def workers(self,ctx):
+    @commands.group(invoke_without_command=True)
+    async def workers(self,ctx,*,user:discord.Member=None):
         '''Returns worker stats'''
-        if ctx.invoked_subcommand is not None:
-            return
+        if user is None:
+            user = ctx.author
         emb = discord.Embed(colour=discord.Colour.from_rgb(149, 252, 126))
-        emb.set_author(name="Your workers",icon_url=str(ctx.author.avatar_url))
+        emb.set_author(name=f"{user.display_name}'s workers",icon_url=str(user.avatar_url))
         emb.description = "You can buy more workers using `f!workers buy`"
         async with ctx.typing():
             db = DB("users")
             db.set_collection('workers')
-            author = await db.find(userid=ctx.author.id)
+            author = await db.find(userid=user.id)
             if author == []:
                 fishermen = 0
                 farmers = 0
                 miners = 0
                 guild_level = 0
-                await db.insert(userid=ctx.author.id,fish=0,chop=0,mine=0,guild_level=0)
+                await db.insert(userid=user.id,fish=0,chop=0,mine=0,guild_level=0)
             else:
                 author = author[0]
                 fishermen = author['fish']
@@ -64,6 +65,7 @@ class Stats(commands.Cog):
         emb.add_field(name="⛏ Miners",value=str(miners))
         await ctx.send(embed=emb)
 
+    @commands.cooldown(rate=1,per=7,type=commands.BucketType.member)
     @workers.command()
     async def buy(self,ctx):
         '''Lets you buy workers'''
@@ -105,11 +107,9 @@ class Stats(commands.Cog):
                         await db.update(user["_id"],money=user['money'])
         await ctx.send(message)
 
-    @commands.group()
+    @commands.group(invoke_without_scommand=True)
     async def guild(self,ctx):
         '''Returns guild stats'''
-        if ctx.invoked_subcommand is not None:
-            return
         async with ctx.typing():
             db = DB('users')
             db.set_collection('workers')
@@ -155,6 +155,63 @@ class Stats(commands.Cog):
                     db.set_collection('workers')
                     await db.update(m["_id"],guild_level=m['guild_level'])
         await ctx.send(message)
+
+    @commands.cooldown(rate=1,per=7)
+    @commands.command(aliases=["lb","leaderboard"])
+    async def top(self,ctx,lbtype="None"):
+        '''Returns top members of the guild by balance'''
+        if lbtype.lower() not in ["balance","money","silver","income","gni"]:
+            await ctx.send(f"""{ctx.author.mention}, this is not a valid leaderboard name.
+```md
+#List of valid leaderboard names
+[balance]:
+- balance
+- money
+- silver
+[income]:
+- income
+- gni
+```""")
+            return
+        users = []
+        ranks = ["🥇", "🥈", "🥉", ":four:", ":five:", ":six:", ":seven:", ":eight:", ":nine:", "🔟"]
+        emb = discord.Embed(title=f"Server Leaderboard (for {lbtype})", colour=discord.Colour.from_rgb(252, 186, 3))
+        async with ctx.typing():
+            db = DB("users")
+            if lbtype in ["balance","money","silver"]:
+                db.set_collection("currency")
+                for i in (await db.find()):
+                    if "money" in i.keys() and ctx.guild.get_member(i["userid"]) is not None:
+                        users.append([i["userid"], i["money"]])
+            elif lbtype in ["income","gni"]:
+                db.set_collection("workers")
+                for i in (await db.find()):
+                    if "fish" in i.keys() and ctx.guild.get_member(i["userid"]) is not None:
+                        users.append([i["userid"], 500+200*(i["fish"]+i["chop"]+i["mine"])])
+            users.sort(key=lambda x: x[1], reverse=True)
+            emb.set_footer(text=f"Total: {len(users)} members")
+
+            def chunks(lst, n):
+                """Yield successive n-sized chunks from lst."""
+                for i in range(0, len(lst), n):
+                    yield lst[i:i + n]
+            chunker = 6
+            reorder = list(chunks(users, chunker))
+            embs = []
+            counter = 0
+            for k in reorder:
+                descs = []
+                l = emb.copy()
+                for i in range(len(k)):
+                    descs.append(
+                        f"**{ranks[i]}** {ctx.guild.get_member(users[chunker * counter + i][0]).mention} ({users[chunker * counter + i][1]}<:Silver:733335375589933130>)")
+                l.description = "\n".join(descs)
+                embs.append(l)
+                counter += 1
+                if counter < len(reorder):
+                    ranks.clear()
+                    ranks.extend(list(map(str, range(chunker * counter + 1, chunker * counter + 1 + len(reorder[counter])))))
+            await SimplePaginator(extras=embs).paginate(ctx)
 
 def setup(bot):
     bot.add_cog(Stats(bot))
