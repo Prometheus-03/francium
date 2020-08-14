@@ -107,7 +107,7 @@ class Stats(commands.Cog):
                         await db.update(user["_id"],money=user['money'])
         await ctx.send(message)
 
-    @commands.group(invoke_without_scommand=True)
+    @commands.group(invoke_without_command=True)
     async def guild(self,ctx):
         '''Returns guild stats'''
         async with ctx.typing():
