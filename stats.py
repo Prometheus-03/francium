@@ -25,10 +25,10 @@ class Stats(commands.Cog):
             author = await db.find(userid=user.id)
             if author == []:
                 await db.insertnorepeat(userid=user.id,money=0,bronze=0,cooldown=0)
-                text = (user.mention+" has a balance of 0<:Silver:733335375589933130> 0<:Bronze:733334935091544156>.")
+                text = (user.mention+" has a balance of **0**<:Silver:733335375589933130> **0**<:Bronze:733334935091544156>.")
             else:
                 author = author[0]
-                text = (user.mention+" has a balance of "+str(author['money'])+"<:Silver:733335375589933130> "+str(author['bronze'])+"<:Bronze:733334935091544156>.")
+                text = (user.mention+" has a balance of **"+str(author['money'])+"**<:Silver:733335375589933130> **"+str(author['bronze'])+"**<:Bronze:733334935091544156>.")
         await ctx.send(text)
 
     @commands.cooldown(rate=1,per=7,type=commands.BucketType.channel)

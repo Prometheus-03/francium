@@ -79,8 +79,9 @@ class Income(commands.Cog):
             else:
                 profile = profile[0]
                 profile["bronze"] += money
-                await db.update(objid=profile["_id"],bronze=profile["bronze"])
-        await ctx.send(f"You cast your fishing net and caught a **{rewards[reward]}**, earning **{money}**<:Bronze:733334935091544156>!")
+                profile["money"] += money//100
+                await db.update(objid=profile["_id"],bronze=profile["bronze"],money=profile["money"])
+        await ctx.send(f"🎣| You cast your fishing net and caught a **{rewards[reward]}**, earning **{money//100}<:Silver:733335375589933130>** and **{money}<:Bronze:733334935091544156>**!")
 
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.member)
     @commands.command()
@@ -114,9 +115,10 @@ class Income(commands.Cog):
             else:
                 profile = profile[0]
                 profile["bronze"] += money
-                await db.update(objid=profile["_id"], bronze=profile["bronze"])
+                profile["money"] += money // 100
+                await db.update(objid=profile["_id"], bronze=profile["bronze"], money=profile["money"])
         await ctx.send(
-            f"You swing your axe and chopped a **{rewards[reward]}**, earning **{money}**<:Bronze:733334935091544156>!")
+            f"🪓| You swing your axe and chopped a **{rewards[reward]}**, earning **{money//100}<:Silver:733335375589933130>** and **{money}<:Bronze:733334935091544156>**!")
 
     @commands.cooldown(rate=1, per=5, type=commands.BucketType.member)
     @commands.command()
@@ -150,9 +152,10 @@ class Income(commands.Cog):
             else:
                 profile = profile[0]
                 profile["bronze"] += money
-                await db.update(objid=profile["_id"], bronze=profile["bronze"])
+                profile["money"] += money // 100
+                await db.update(objid=profile["_id"], bronze=profile["bronze"], money=profile["money"])
         await ctx.send(
-            f"You swing your pickaxe and hit **{rewards[reward]}**, earning **{money}**<:Bronze:733334935091544156>!")
+            f"⛏| You swing your pickaxe and hit **{rewards[reward]}**, earning **{money//100}<:Silver:733335375589933130>** and **{money}<:Bronze:733334935091544156>**!")
 
     @commands.cooldown(rate=1,per=10)
     @commands.command(aliases=["convert"])
