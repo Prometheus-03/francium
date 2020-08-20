@@ -39,7 +39,7 @@ class Stats(commands.Cog):
             user = ctx.author
         emb = discord.Embed(colour=discord.Colour.from_rgb(149, 252, 126))
         emb.set_author(name=f"{user.display_name}'s workers",icon_url=str(user.avatar_url))
-        emb.description = "You can buy more workers using `f!workers buy`"
+        emb.description = "You can buy more workers using `d!workers buy`"
         async with ctx.typing():
             db = DB("users")
             db.set_collection('workers')
@@ -86,7 +86,7 @@ class Stats(commands.Cog):
                 workstats = workstats[0]
                 workers = (workstats['fish']+workstats['chop']+workstats['mine'])
                 if workstats['guild_level']*3==workers:
-                    message = ("You have reached the maximum number of workers for your guild level. Type `f!guild upgrade` to upgrade your guild.")
+                    message = ("You have reached the maximum number of workers for your guild level. Type `d!guild upgrade` to upgrade your guild.")
                 else:
                     if user['money']<int(workstats['guild_level']*500+333):
                         message = (f"You do not have a sufficient balance ({workstats['guild_level']*500+333}<:Silver:733335375589933130>)")
