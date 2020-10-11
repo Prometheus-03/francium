@@ -6,7 +6,7 @@ from discord.ext import commands
 from utils import *
 import tracemalloc
 
-bot = commands.Bot(command_prefix = commands.when_mentioned_or("d!", "D!", "d>", "D>", "dun ", "Dun "))
+bot = commands.Bot(command_prefix = commands.when_mentioned_or("d!", "D!", "d>", "D>", "dun ", "Dun "), intents = discord.Intents.all())
 
 @bot.event
 async def on_message_edit(before, after):
