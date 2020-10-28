@@ -22,12 +22,16 @@ class General(commands.Cog):
         else:
             hrs = str(hrs)+"th"
         day = ["Mense Quattuor","Mense Quinque","Sex Mensis","Ultima Mensis","Mensis Unius","Duabus Mensis","Tria Mensis"][timenow.weekday()]
-        ttof = datetime.datetime.fromtimestamp(1590105600)
+        ttof = datetime.datetime.fromtimestamp(1604016000)
         diff = timenow-ttof
         week = diff.days//7
+        asorbs= "AS"
+        if week < 0:
+            week = abs(week)
+            asorbs = "BS"
         emb = discord.Embed(title="Time now",colour=discord.Colour.dark_gold())
         emb.add_field(name="Real life", value=datetime.datetime.strftime(timenow, "%d %B %Y, %H:%M:%S UTC"))
-        emb.add_field(name="Roleplay", value=f"{hrs} {day}, {week} AS")
+        emb.add_field(name="Roleplay", value=f"{hrs} {day}, {week} {asorbs}")
         await ctx.send(embed=emb)
 
 def setup(bot):
