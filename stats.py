@@ -160,7 +160,7 @@ class Stats(commands.Cog):
     @commands.command(aliases=["lb","leaderboard"])
     async def top(self,ctx,lbtype="None"):
         '''Returns top members of the guild by balance'''
-        if lbtype.lower() not in ["balance","money","silver","income","gni"]:
+        if lbtype.lower() not in ["balance","money","silver","bal","income","gni","points","military"]:
             await ctx.send(f"""{ctx.author.mention}, this is not a valid leaderboard name.
 ```md
 #List of valid leaderboard names
@@ -168,9 +168,13 @@ class Stats(commands.Cog):
 - balance
 - money
 - silver
+- bal
 [income]:
 - income
 - gni
+[military points]:
+- points
+- military
 ```""")
             return
         users = []
@@ -178,16 +182,23 @@ class Stats(commands.Cog):
         emb = discord.Embed(title=f"Server Leaderboard (for {lbtype})", colour=discord.Colour.from_rgb(252, 186, 3))
         async with ctx.typing():
             db = DB("users")
-            if lbtype in ["balance","money","silver"]:
+            if lbtype in ["balance","money","silver","bal"]:
                 db.set_collection("currency")
                 for i in (await db.find()):
                     if "money" in i.keys() and ctx.guild.get_member(i["userid"]) is not None:
                         users.append([i["userid"], i["money"]])
+                addon = "<:Silver:733335375589933130>"
             elif lbtype in ["income","gni"]:
                 db.set_collection("workers")
                 for i in (await db.find()):
                     if "fish" in i.keys() and ctx.guild.get_member(i["userid"]) is not None:
                         users.append([i["userid"], 500+200*(i["fish"]+i["chop"]+i["mine"])])
+                addon = "<:Silver:733335375589933130>"
+            elif lbtype in ["military","points"]:
+                db.set_collection("military")
+                for i in (await db.find()):
+                    users.append([i["userid"],i["points"]])
+                addon = " points"
             users.sort(key=lambda x: x[1], reverse=True)
             emb.set_footer(text=f"Total: {len(users)} members")
 
@@ -204,7 +215,7 @@ class Stats(commands.Cog):
                 l = emb.copy()
                 for i in range(len(k)):
                     descs.append(
-                        f"**{ranks[i]}** {ctx.guild.get_member(users[chunker * counter + i][0]).mention} ({users[chunker * counter + i][1]}<:Silver:733335375589933130>)")
+                        f"**{ranks[i]}** {ctx.guild.get_member(users[chunker * counter + i][0]).mention} ({users[chunker * counter + i][1]}{addon})")
                 l.description = "\n".join(descs)
                 embs.append(l)
                 counter += 1

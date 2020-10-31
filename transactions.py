@@ -60,7 +60,7 @@ class Transactions(commands.Cog):
                     await mess.delete()
                 await ctx.send(
                     f"Transfer succeeded! {money}<:Silver:733335375589933130> has been transferred to {recipient.mention}")
-                webhook = await get_webhook(ctx, 733520821619916900, 733530983751483423)
+                webhook = await get_webhook(self.bot, 733520821619916900, 733530983751483423)
                 emb = discord.Embed(title="Financial transfer", colour=discord.Colour.lighter_grey())
                 emb.description = f"""**Sender:** {ctx.author.mention}
         **Receiver: ** {recipient.mention}
@@ -92,7 +92,7 @@ class Transactions(commands.Cog):
                 await db.update(objid=author[0]["_id"], money=author[0]['money'])
                 message = "Success! " + str(
                     money) + "<:Silver:733335375589933130> has been deposited into the world bank!"
-                webhook = await get_webhook(ctx, 733520821619916900, 733530983751483423)
+                webhook = await get_webhook(self.bot, 733520821619916900, 733530983751483423)
                 embed = discord.Embed(title="Financial deposit", colour=discord.Colour.light_grey())
                 embed.description = f"""**Depositor:** {ctx.author.mention}
         **Amount:** {money}

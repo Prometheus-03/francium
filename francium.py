@@ -34,7 +34,7 @@ async def on_command_error(ctx, error):
         if len(outputres)>1900:
             outputres="..."+outputres[-1897:]
         embed.description = f"[[Jump!]]({ctx.message.jump_url})"+"\n"+"```"+outputres+"```"
-        webhook = await get_webhook(ctx, 733520795766227026, 733538757289967646)
+        webhook = await get_webhook(bot, 733520795766227026, 733538757289967646)
         await webhook.send(embed=embed)
         print(outputres)
 
@@ -42,7 +42,7 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_ready():
     bot.remove_command("help")
-    for i in ["info","general","income","stats","transactions","repl"]:
+    for i in ["info","general","income","stats","military","transactions","repl"]:
         bot.load_extension(i)
     await bot.get_channel(733520795766227026).send(embed=discord.Embed(title="Bot loaded",description="```"+datetime.datetime.now().strftime("%H:%M:%S, %d/%m/%Y")+"```"))
     print('Bot is ready')
