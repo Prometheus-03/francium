@@ -100,5 +100,26 @@ class Transactions(commands.Cog):
                 await webhook.send(embed=embed)
             await ctx.send(message)
 
+    @commands.check(commands.is_owner())
+    @commands.command()
+    async def loan(self, ctx, amount:int, user:discord.Member):
+        """Lets Prometheus give you loans"""
+        async with ctx.typing():
+            db = DB("users")
+            db.set_collection("currency")
+            acc = await db.find(userid=user.id)
+            if not acc:
+                await db.insert(userid=user.id, money=amount, bronze=0, cooldown=0)
+            else:
+                acc = acc[0]
+                await db.update(objid=acc["_id"], money=acc["money"]+amount)
+            webhook = await get_webhook(self.bot, 733520821619916900, 733530983751483423)
+            embed = discord.Embed(title="Financial Loan", colour=discord.Colour.dark_gold())
+            embed.description = f"""**Loaned to:** {user.mention}
+                    **Amount:** {amount}
+                    [[Jump to transaction]]({ctx.message.jump_url})"""
+            await webhook.send(embed=embed)
+        await ctx.send(f"{amount}<:Silver:733335375589933130> has been loaned by the world bank to {user}")
+
 def setup(bot):
     bot.add_cog(Transactions(bot))
